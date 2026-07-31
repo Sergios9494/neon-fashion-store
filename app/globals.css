@@ -468,7 +468,7 @@ html[data-neon-theme="black"],html[data-neon-theme="black"] body { background:#0
   .instagram-viewport { display:block; }
   .instagram-strip { display:flex; height:300px; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory; overscroll-behavior-inline:contain; scrollbar-width:none; }
   .instagram-strip::-webkit-scrollbar { display:none; }
-  .instagram-strip div { display:block !important; flex:0 0 64%; height:100%; scroll-snap-align:center; background-size:700% auto; }
+  .instagram-strip div { display:block !important; flex:0 0 64%; height:100%; scroll-snap-align:start; scroll-snap-stop:always; background-size:700% auto; }
   .insta-arrow { display:grid; place-items:center; position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border:0; border-radius:50%; background:rgba(0,0,0,.5); backdrop-filter:blur(6px); color:#fff; cursor:pointer; z-index:2; }
   .insta-arrow.prev { left:8px; }
   .insta-arrow.next { right:8px; }
