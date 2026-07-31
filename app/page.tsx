@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Category = "Hoodies" | "T-Shirts" | "Bombers" | "Trousers" | "Accessories";
 type Product = {
@@ -47,7 +47,7 @@ const categories: Array<{ name: Category; position: string }> = [
   { name: "Accessories", position: "100% 50%" },
 ];
 
-function Icon({ name, size = 20 }: { name: "search" | "user" | "bag" | "truck" | "badge" | "box" | "headset" | "menu" | "close" | "arrow"; size?: number }) {
+function Icon({ name, size = 20 }: { name: "search" | "user" | "bag" | "truck" | "badge" | "box" | "headset" | "menu" | "close" | "arrow" | "chevron-left" | "chevron-right"; size?: number }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.65, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   const paths = {
     search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
@@ -60,6 +60,8 @@ function Icon({ name, size = 20 }: { name: "search" | "user" | "bag" | "truck" |
     menu: <path d="M4 7h16M4 12h16M4 17h16" />,
     close: <path d="m6 6 12 12M18 6 6 18" />,
     arrow: <path d="M4 12h16M14 6l6 6-6 6" />,
+    "chevron-left": <path d="m15 5-7 7 7 7" />,
+    "chevron-right": <path d="m9 5 7 7-7 7" />,
   };
   return <svg {...common}>{paths[name]}</svg>;
 }
@@ -76,6 +78,13 @@ export default function Home() {
   const [toast, setToast] = useState("");
   const [email, setEmail] = useState("");
   const [activeCategory, setActiveCategory] = useState<"All" | Category>("All");
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+  const instaScrollRef = useRef<HTMLDivElement>(null);
+  const scrollCarousel = (ref: React.RefObject<HTMLDivElement | null>, direction: -1 | 1) => {
+    const track = ref.current;
+    if (!track) return;
+    track.scrollBy({ left: track.clientWidth * 0.8 * direction, behavior: "smooth" });
+  };
   const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
   const shipping = subtotal >= 75 ? 0 : 8;
   const orderTotal = subtotal + shipping;
@@ -206,11 +215,15 @@ export default function Home() {
 
       <section className="section-shell category-section" id="categories">
         <h2>SHOP BY CATEGORY</h2>
-        <div className="category-grid">
-          {categories.map((category) => <article className="category-card" key={category.name}>
-            <div className="category-photo" style={{ backgroundPosition: category.position }} />
-            <div className="category-overlay"><h3>{category.name}</h3><button onClick={() => shopCategory(category.name)}>SHOP NOW</button></div>
-          </article>)}
+        <div className="carousel">
+          <button type="button" className="carousel-arrow prev" aria-label="Previous categories" onClick={() => scrollCarousel(categoryScrollRef, -1)}><Icon name="chevron-left" size={22} /></button>
+          <div className="category-grid" ref={categoryScrollRef}>
+            {categories.map((category) => <article className="category-card" key={category.name}>
+              <div className="category-photo" style={{ backgroundPosition: category.position }} />
+              <div className="category-overlay"><h3>{category.name}</h3><button onClick={() => shopCategory(category.name)}>SHOP NOW</button></div>
+            </article>)}
+          </div>
+          <button type="button" className="carousel-arrow next" aria-label="Next categories" onClick={() => scrollCarousel(categoryScrollRef, 1)}><Icon name="chevron-right" size={22} /></button>
         </div>
       </section>
 
@@ -247,12 +260,14 @@ export default function Home() {
 
       <section className="instagram" aria-label="Instagram feed">
         <div className="instagram-heading"><strong>FOLLOW US ON INSTAGRAM</strong><span>@neon.thrift</span></div>
-        <div className="instagram-strip">
+        <div className="instagram-strip" ref={instaScrollRef}>
           {["0% 50%", "16.667% 50%", "33.333% 50%", "50% 50%", "66.667% 50%", "83.333% 50%", "100% 50%"].map((position, index) => (
             <div key={index} style={{ backgroundPosition: position }} />
           ))}
         </div>
-        <button aria-label="View Instagram"><Icon name="arrow" /></button>
+        <button type="button" className="insta-arrow prev" aria-label="Previous photos" onClick={() => scrollCarousel(instaScrollRef, -1)}><Icon name="chevron-left" size={20} /></button>
+        <button type="button" className="insta-arrow next" aria-label="Next photos" onClick={() => scrollCarousel(instaScrollRef, 1)}><Icon name="chevron-right" size={20} /></button>
+        <button className="instagram-cta" aria-label="View Instagram"><Icon name="arrow" /></button>
       </section>
 
       <footer id="about">
