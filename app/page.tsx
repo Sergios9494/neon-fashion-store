@@ -260,14 +260,15 @@ export default function Home() {
 
       <section className="instagram" aria-label="Instagram feed">
         <div className="instagram-heading"><strong>FOLLOW US ON INSTAGRAM</strong><span>@neon.thrift</span></div>
-        <div className="instagram-strip" ref={instaScrollRef}>
-          {["0% 50%", "16.667% 50%", "33.333% 50%", "50% 50%", "66.667% 50%", "83.333% 50%", "100% 50%"].map((position, index) => (
-            <div key={index} style={{ backgroundPosition: position }} />
-          ))}
+        <div className="instagram-viewport">
+          <button type="button" className="insta-arrow prev" aria-label="Previous photos" onClick={() => scrollCarousel(instaScrollRef, -1)}><Icon name="chevron-left" size={20} /></button>
+          <div className="instagram-strip" ref={instaScrollRef}>
+            {["0% 50%", "16.667% 50%", "33.333% 50%", "50% 50%", "66.667% 50%", "83.333% 50%", "100% 50%"].map((position, index) => (
+              <div key={index} style={{ backgroundPosition: position }} />
+            ))}
+          </div>
+          <button type="button" className="insta-arrow next" aria-label="Next photos" onClick={() => scrollCarousel(instaScrollRef, 1)}><Icon name="chevron-right" size={20} /></button>
         </div>
-        <button type="button" className="insta-arrow prev" aria-label="Previous photos" onClick={() => scrollCarousel(instaScrollRef, -1)}><Icon name="chevron-left" size={20} /></button>
-        <button type="button" className="insta-arrow next" aria-label="Next photos" onClick={() => scrollCarousel(instaScrollRef, 1)}><Icon name="chevron-right" size={20} /></button>
-        <button className="instagram-cta" aria-label="View Instagram"><Icon name="arrow" /></button>
       </section>
 
       <footer id="about">
